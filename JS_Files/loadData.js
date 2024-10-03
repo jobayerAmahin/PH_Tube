@@ -1,4 +1,4 @@
-//Load Initial Data
+//-------------------------------------------------------------->Load Initial Data
 const loadData = () => {
   try {
     fetch("https://openapi.programming-hero.com/api/phero-tube/categories")
@@ -13,17 +13,31 @@ const showCategory = (data) => {
   console.log(data);
   data.forEach((elem) => {
     console.log(elem);
-    const categBtn = document.createElement("button");
-    categBtn.innerText = elem.category;
-
-    categBtn.classList.add("btn");
-    document.getElementById("fetchBtn").appendChild(categBtn);
+    const sectionBtn = document.createElement("div");
+    sectionBtn.innerHTML = `
+    <button onclick='loadCategVideos(${elem.category_id})' class='btn'>
+      ${elem.category}
+    </button>
+    `
+    document.getElementById("fetchBtn").appendChild(sectionBtn);
   });
 };
 
 loadData();
 
-//Load Video
+//Load Category Videos
+
+const loadCategVideos=(id)=>{
+  try{
+    fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
+      .then(res=>res.json())
+      .then(data=>showVideo(data.category))
+  }
+  catch(error){
+    console.log('error found',error)
+  }
+}
+//------------------------------------------------------------------->Load Video
 const videoObj = {
   category_id: "1003",
   video_id: "aaac",
@@ -43,6 +57,19 @@ const videoObj = {
   description:
     "Comedian Kevin Hart brings his unique brand of humor to life in 'Laugh at My Pain.' With 1.1K views, this show offers a hilarious and candid look into Kevin's personal stories, struggles, and triumphs. It's a laugh-out-loud experience filled with sharp wit, clever insights, and a relatable charm that keeps audiences coming back for more.",
 };
+
+//Time Function
+
+const getDetailTime=(t)=>{
+    
+  const hr=parseInt(t/3600)
+  let remSec=t%3600
+  const minutes=parseInt(remSec/60)
+  let lastSec=remSec%60
+  return `${hr} hour ${minutes} minutes ${lastSec} seconds ago`
+}
+
+//Load Video Function
 const loadVideo = () => {
   try {
     fetch("https://openapi.programming-hero.com/api/phero-tube/videos")
@@ -55,6 +82,7 @@ const loadVideo = () => {
 
 const showVideo = (loadedVideos) => {
   const videoSec=document.getElementById('video')
+  videoSec.innerHTML=''
   loadedVideos.forEach((d) => {
     console.log(d);
     const newDiv = document.createElement("div");
@@ -64,7 +92,7 @@ const showVideo = (loadedVideos) => {
     <img
       src=${d.thumbnail} class='h-full w-full object-cover'
       alt="Shoes" />
-      <span class='absolute right-2 bottom-2 text-base-100 bg-black p-2 rounded-md'>${d.others.posted_date}</span>
+      <span class='absolute right-2 bottom-2 text-base-100 bg-black p-2 rounded-md'>${getDetailTime(d.others.posted_date)}</span>
     </figure>
     <div class="mx-0 my-2 flex gap-3">
         <img src=${d.authors[0].profile_picture} class='h-10 w-10 rounded-full object-cover'/>
