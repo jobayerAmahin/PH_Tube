@@ -2,17 +2,17 @@
 const loadData = () => {
   try {
     fetch("https://openapi.programming-hero.com/api/phero-tube/categories")
-      .then((res) => res.json())
-      .then((showData) => showCategory(showData.categories));
+      .then(res => res.json())
+      .then(showData => showCategory(showData.categories));
   } catch (err) {
     console.log("Error", err);
   }
 };
 
 const showCategory = (data) => {
-  console.log(data);
+  
   data.forEach((elem) => {
-    console.log(elem);
+    
     const sectionBtn = document.createElement("div");
     sectionBtn.innerHTML = `
     <button onclick='loadCategVideos(${elem.category_id})' class='btn'>
@@ -83,8 +83,24 @@ const loadVideo = () => {
 const showVideo = (loadedVideos) => {
   const videoSec=document.getElementById('video')
   videoSec.innerHTML=''
+  
+
+  if(loadedVideos.length==0){
+    videoSec.classList.remove('grid')
+    const noVideoDiv=document.createElement('div')
+    noVideoDiv.classList='flex flex-col gap-3 items-center justify-center text-center min-h-[300px] w-full'
+    noVideoDiv.innerHTML=`
+    <img src='./Icon.png'/>
+    <h2 class='text-2xl font-bold'>Oops! Sorry, there is no content in this page</h2>
+    `
+
+    videoSec.appendChild(noVideoDiv)
+  }
+  else{
+    videoSec.classList.add('grid')
+  }
   loadedVideos.forEach((d) => {
-    console.log(d);
+    
     const newDiv = document.createElement("div");
     newDiv.classList='card card-compact'
     newDiv.innerHTML = `
@@ -92,7 +108,7 @@ const showVideo = (loadedVideos) => {
     <img
       src=${d.thumbnail} class='h-full w-full object-cover'
       alt="Shoes" />
-      <span class='absolute right-2 bottom-2 text-base-100 bg-black p-2 rounded-md'>${getDetailTime(d.others.posted_date)}</span>
+      <span class='absolute right-2 bottom-2 text-base-100 bg-black p-2 rounded-md text-xs'>${getDetailTime(d.others.posted_date)}</span>
     </figure>
     <div class="mx-0 my-2 flex gap-3">
         <img src=${d.authors[0].profile_picture} class='h-10 w-10 rounded-full object-cover'/>
