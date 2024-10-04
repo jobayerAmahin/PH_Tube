@@ -84,6 +84,32 @@ const getDetailTime=(t)=>{
   return `${hr} hour ${minutes} minutes ${lastSec} seconds ago`
 }
 
+//Load Detail function
+const loadDetail=async(id)=>{
+ 
+  try{
+    const mainUrl=`https://openapi.programming-hero.com/api/phero-tube/video/${id}`
+    const res=await fetch(mainUrl)
+    const data=await res.json()
+    showModalDetails(data.video)
+    
+  }
+  catch(error){
+    console.log('Error',error)
+  }
+}
+
+//show moadl content
+
+const showModalDetails=(d)=>{
+  const modalContent=document.getElementById('modalContent')
+  modalContent.innerHTML=`
+  <img src=${d.thumbnail}/>
+  <p>${d.description}</p>
+  `
+  document.getElementById('modalBtn').click()
+}
+
 //Load Video Function
 const loadVideo = () => {
   try {
@@ -133,6 +159,7 @@ const showVideo = (loadedVideos) => {
                 <p>${d.authors[0].profile_name}</p>
                 ${d.authors[0].verified==true ?`<img src='https://img.icons8.com/?size=100&id=D9RtvkuOe31p&format=png&color=000000' class='w-5 h-5'/>`:""}
             </div>
+            <p><button class='btn btn-sm btn-error' onclick='loadDetail("${d.video_id}")'>Details</button></p>
         </div>
      </div>
     `;
