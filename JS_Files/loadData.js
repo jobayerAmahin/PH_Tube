@@ -15,7 +15,7 @@ const showCategory = (data) => {
     
     const sectionBtn = document.createElement("div");
     sectionBtn.innerHTML = `
-    <button onclick='loadCategVideos(${elem.category_id})' class='btn'>
+    <button id='${elem.category_id}' onclick='loadCategVideos(${elem.category_id})' class='btn categButtonsAll'>
       ${elem.category}
     </button>
     `
@@ -25,13 +25,28 @@ const showCategory = (data) => {
 
 loadData();
 
+//Remove Active Background
+const removeActive=()=>{
+  const allButtons=document.getElementsByClassName('categButtonsAll')
+  console.log(allButtons)
+  for(const bTn of allButtons){
+    bTn.classList.remove('active')
+  }
+}
+
 //Load Category Videos
 
 const loadCategVideos=(id)=>{
   try{
     fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
       .then(res=>res.json())
-      .then(data=>showVideo(data.category))
+      .then(data=>{
+        removeActive()
+        const categBtn=document.getElementById(`${id}`)
+        categBtn.classList.add('active')
+        showVideo(data.category)
+
+      })
   }
   catch(error){
     console.log('error found',error)
