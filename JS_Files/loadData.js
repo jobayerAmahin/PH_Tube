@@ -28,7 +28,7 @@ loadData();
 //Remove Active Background
 const removeActive=()=>{
   const allButtons=document.getElementsByClassName('categButtonsAll')
-  console.log(allButtons)
+  
   for(const bTn of allButtons){
     bTn.classList.remove('active')
   }
@@ -53,25 +53,25 @@ const loadCategVideos=(id)=>{
   }
 }
 //------------------------------------------------------------------->Load Video
-const videoObj = {
-  category_id: "1003",
-  video_id: "aaac",
-  thumbnail: "https://i.ibb.co/NTncwqH/luahg-at-pain.jpg",
-  title: "Laugh at My Pain",
-  authors: [
-    {
-      profile_picture: "https://i.ibb.co/XVHM7NP/kevin.jpg",
-      profile_name: "Kevin Hart",
-      verified: false,
-    },
-  ],
-  others: {
-    views: "1.1K",
-    posted_date: "13885",
-  },
-  description:
-    "Comedian Kevin Hart brings his unique brand of humor to life in 'Laugh at My Pain.' With 1.1K views, this show offers a hilarious and candid look into Kevin's personal stories, struggles, and triumphs. It's a laugh-out-loud experience filled with sharp wit, clever insights, and a relatable charm that keeps audiences coming back for more.",
-};
+// const videoObj = {
+//   category_id: "1003",
+//   video_id: "aaac",
+//   thumbnail: "https://i.ibb.co/NTncwqH/luahg-at-pain.jpg",
+//   title: "Laugh at My Pain",
+//   authors: [
+//     {
+//       profile_picture: "https://i.ibb.co/XVHM7NP/kevin.jpg",
+//       profile_name: "Kevin Hart",
+//       verified: false,
+//     },
+//   ],
+//   others: {
+//     views: "1.1K",
+//     posted_date: "13885",
+//   },
+//   description:
+//     "Comedian Kevin Hart brings his unique brand of humor to life in 'Laugh at My Pain.' With 1.1K views, this show offers a hilarious and candid look into Kevin's personal stories, struggles, and triumphs. It's a laugh-out-loud experience filled with sharp wit, clever insights, and a relatable charm that keeps audiences coming back for more.",
+// };
 
 //Time Function
 
@@ -111,9 +111,9 @@ const showModalDetails=(d)=>{
 }
 
 //Load Video Function
-const loadVideo = () => {
+const loadVideo = (searchTitle='') => {
   try {
-    fetch("https://openapi.programming-hero.com/api/phero-tube/videos")
+    fetch(`https://openapi.programming-hero.com/api/phero-tube/videos?title=${searchTitle}`)
       .then((res) => res.json())
       .then((data) => showVideo(data.videos));
   } catch (error) {
@@ -166,5 +166,9 @@ const showVideo = (loadedVideos) => {
     videoSec.appendChild(newDiv)
   });
 };
+
+document.getElementById('searchContent').addEventListener('keyup',(e)=>{
+  loadVideo(e.target.value)
+})
 
 loadVideo();
